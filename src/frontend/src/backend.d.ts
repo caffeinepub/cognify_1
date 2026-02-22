@@ -7,6 +7,21 @@ export interface None {
     __kind__: "None";
 }
 export type Option<T> = Some<T> | None;
+export class ExternalBlob {
+    getBytes(): Promise<Uint8Array<ArrayBuffer>>;
+    getDirectURL(): string;
+    static fromURL(url: string): ExternalBlob;
+    static fromBytes(blob: Uint8Array<ArrayBuffer>): ExternalBlob;
+    withUploadProgress(onProgress: (percentage: number) => void): ExternalBlob;
+}
+export type Time = bigint;
+export type ClassLevel = bigint;
+export interface Course {
+    id: string;
+    name: string;
+    description: string;
+    classLevel: ClassLevel;
+}
 export interface StudentProfile {
     contact: ContactInfo;
     parentContact: ParentContact;
@@ -14,18 +29,27 @@ export interface StudentProfile {
     classLevel: ClassLevel;
     enrolledCourses: Array<string>;
 }
-export type Time = bigint;
 export interface TestScore {
     maxScore: bigint;
     date: Time;
     score: bigint;
     courseId: string;
 }
+export interface StudyMaterial {
+    id: string;
+    title: string;
+    file: ExternalBlob;
+    description: string;
+    fileName: string;
+    classLevel: ClassLevel;
+    courseId: string;
+    uploadTime: Time;
+    uploadedBy: Principal;
+}
 export interface ParentContact {
     name: string;
     phone: string;
 }
-export type ClassLevel = bigint;
 export interface AttendanceRecord {
     present: boolean;
     date: Time;
@@ -39,24 +63,22 @@ export interface UserProfile {
     name: string;
     role: string;
 }
-export interface Course {
-    id: string;
-    name: string;
-    description: string;
-    classLevel: ClassLevel;
-}
 export enum UserRole {
     admin = "admin",
     user = "user",
     guest = "guest"
 }
 export interface backendInterface {
+    addAdmin(newAdmin: Principal): Promise<void>;
     addCourse(id: string, name: string, description: string, classLevel: ClassLevel): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
+    deleteStudyMaterial(id: string): Promise<void>;
+    downloadStudyMaterial(id: string): Promise<StudyMaterial>;
     editCourse(id: string, name: string, description: string, classLevel: ClassLevel): Promise<void>;
     enrollInCourse(courseId: string): Promise<void>;
     getAllCourses(): Promise<Array<Course>>;
     getAllStudents(): Promise<Array<StudentProfile>>;
+    getAllStudyMaterials(courseId: string | null, classLevel: ClassLevel | null): Promise<Array<StudyMaterial>>;
     getCallerAttendance(): Promise<Array<AttendanceRecord>>;
     getCallerStudentProfile(): Promise<StudentProfile | null>;
     getCallerTestScores(): Promise<Array<TestScore>>;
@@ -80,4 +102,6 @@ export interface backendInterface {
     searchStudentsByName(searchTerm: string): Promise<Array<StudentProfile>>;
     updateCallerStudentProfile(name: string, classLevel: ClassLevel, contact: ContactInfo, parentContact: ParentContact, enrolledCourses: Array<string> | null): Promise<void>;
     updateStudentProfile(studentId: Principal, name: string, classLevel: ClassLevel, contact: ContactInfo, parentContact: ParentContact, enrolledCourses: Array<string> | null): Promise<void>;
+    updateStudyMaterial(id: string, title: string, description: string, fileName: string, courseId: string, classLevel: ClassLevel): Promise<void>;
+    uploadStudyMaterial(id: string, title: string, description: string, fileName: string, file: ExternalBlob, courseId: string, classLevel: ClassLevel): Promise<void>;
 }

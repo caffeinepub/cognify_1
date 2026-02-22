@@ -3,7 +3,7 @@ import { useInternetIdentity } from '../hooks/useInternetIdentity';
 import { useIsCallerAdmin } from '../hooks/useQueries';
 import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
-import { BookOpen, Users, Calendar, FileText, LayoutDashboard, GraduationCap, Menu, X, Heart } from 'lucide-react';
+import { BookOpen, Users, Calendar, FileText, LayoutDashboard, GraduationCap, Menu, X, Heart, Settings, Upload, Phone } from 'lucide-react';
 import { useState } from 'react';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
@@ -36,6 +36,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   const studentLinks = [
     { to: '/courses', label: 'Courses', icon: BookOpen },
+    { to: '/materials', label: 'Study Materials', icon: FileText },
     { to: '/profile', label: 'Profile', icon: Users },
     { to: '/attendance', label: 'Attendance', icon: Calendar },
     { to: '/test-results', label: 'Test Results', icon: FileText }
@@ -45,8 +46,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     { to: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { to: '/admin/students', label: 'Students', icon: Users },
     { to: '/admin/courses', label: 'Courses', icon: BookOpen },
+    { to: '/admin/materials', label: 'Upload Materials', icon: Upload },
     { to: '/admin/attendance', label: 'Attendance', icon: Calendar },
-    { to: '/admin/test-scores', label: 'Test Scores', icon: FileText }
+    { to: '/admin/test-scores', label: 'Test Scores', icon: FileText },
+    { to: '/admin/settings', label: 'Settings', icon: Settings }
   ];
 
   const links = isAdmin ? adminLinks : studentLinks;
@@ -146,20 +149,26 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <GraduationCap className="h-5 w-5 text-primary" />
               <span>© {new Date().getFullYear()} Cognify. All rights reserved.</span>
             </div>
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <span>Built with</span>
-              <Heart className="h-4 w-4 text-red-500 fill-red-500" />
-              <span>using</span>
-              <a
-                href={`https://caffeine.ai/?utm_source=Caffeine-footer&utm_medium=referral&utm_content=${encodeURIComponent(
-                  window.location.hostname
-                )}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-medium text-primary hover:underline"
-              >
-                caffeine.ai
-              </a>
+            <div className="flex flex-col sm:flex-row items-center gap-4">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Phone className="h-4 w-4 text-primary" />
+                <span className="font-medium">Contact: 778-095-1766</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <span>Built with</span>
+                <Heart className="h-4 w-4 text-red-500 fill-red-500" />
+                <span>using</span>
+                <a
+                  href={`https://caffeine.ai/?utm_source=Caffeine-footer&utm_medium=referral&utm_content=${encodeURIComponent(
+                    window.location.hostname
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-medium text-primary hover:underline"
+                >
+                  caffeine.ai
+                </a>
+              </div>
             </div>
           </div>
         </div>

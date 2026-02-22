@@ -3,6 +3,7 @@ import { useInternetIdentity } from '../hooks/useInternetIdentity';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { BookOpen, Users, Calendar, FileText, CheckCircle, Target, Lightbulb } from 'lucide-react';
+import OwnerAccessGuide from '../components/OwnerAccessGuide';
 
 export default function HomePage() {
   const { identity } = useInternetIdentity();
@@ -56,6 +57,17 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Owner Access Guide Section */}
+      {!isAuthenticated && (
+        <section className="py-16 md:py-24 bg-muted/30">
+          <div className="container">
+            <div className="max-w-4xl mx-auto">
+              <OwnerAccessGuide />
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Features Section */}
       <section className="py-16 md:py-24 bg-card">

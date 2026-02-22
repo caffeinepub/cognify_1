@@ -1,5 +1,16 @@
 {
   "frontend/src/pages/AdminCoursesPage.tsx": "Admin page for managing courses with add/edit functionality using dialogs and displaying all courses in a table with class level badges.",
   "frontend/src/pages/AdminAttendancePage.tsx": "Admin page for marking student attendance by course with toggle switches for present/absent status and filtered student lists.",
-  "frontend/src/pages/AdminTestScoresPage.tsx": "Admin page for recording test scores with student/course selection and score input fields showing calculated percentages."
+  "frontend/src/pages/AdminTestScoresPage.tsx": "Admin page for recording test scores with student/course selection and score input fields showing calculated percentages.",
+  "frontend/src/pages/AdminSetupPage.tsx": "Admin setup page for configuring initial administrator access, displays Internet Identity principal ID and allows adding admins via principal ID input.",
+  "frontend/src/pages/AdminSettingsPage.tsx": "Admin-only settings page for managing administrator access, displays current admin's principal ID and provides form to add new administrators.",
+  "frontend/src/components/OwnerAccessGuide.tsx": "Collapsible guide component explaining Internet Identity authentication, first-time admin setup, principal ID usage, and how to add additional administrators.",
+  "frontend/src/App.tsx": "Main app component with routing configuration including new routes for /materials (student materials page) and /admin/materials (admin materials management page).",
+  "frontend/src/hooks/useActor.ts": "Actor initialization hook with automatic first-user admin grant functionality, checks admin status on login and grants access if no admins exist.",
+  "frontend/src/hooks/useQueries.ts": "React Query hooks for all backend operations including useGetStudentProfile hook for admin access to student profiles, and study material hooks with proper Principal type conversions for string-based IDs.",
+  "frontend/src/components/Layout.tsx": "Application layout component with header, navigation (including new Study Materials link for students and Upload Materials link for admins), and footer with phone number 778-095-1766 displayed alongside existing branding.",
+  "frontend/src/pages/HomePage.tsx": "Home page with hero section, features, teaching method, and integrated OwnerAccessGuide component for unauthenticated users.",
+  "frontend/src/utils/urlParams.ts": "URL parameter utility functions for extracting and managing query parameters and session storage, includes hasUrlParameter helper function.",
+  "frontend/src/pages/AdminMaterialsPage.tsx": "Admin page for managing study materials with upload dialog supporting PDF/DOC/DOCX/PPT/PPTX files up to 10MB, table display with filtering by course and class level, and edit/delete actions with confirmation dialogs.",
+  "frontend/src/pages/MaterialsPage.tsx": "Student-facing page displaying study materials filtered by enrolled courses and class level with download functionality for each material card."
 }

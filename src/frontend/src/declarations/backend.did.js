@@ -8,11 +8,35 @@
 
 import { IDL } from '@icp-sdk/core/candid';
 
+export const _CaffeineStorageCreateCertificateResult = IDL.Record({
+  'method' : IDL.Text,
+  'blob_hash' : IDL.Text,
+});
+export const _CaffeineStorageRefillInformation = IDL.Record({
+  'proposed_top_up_amount' : IDL.Opt(IDL.Nat),
+});
+export const _CaffeineStorageRefillResult = IDL.Record({
+  'success' : IDL.Opt(IDL.Bool),
+  'topped_up_amount' : IDL.Opt(IDL.Nat),
+});
 export const ClassLevel = IDL.Nat;
 export const UserRole = IDL.Variant({
   'admin' : IDL.Null,
   'user' : IDL.Null,
   'guest' : IDL.Null,
+});
+export const ExternalBlob = IDL.Vec(IDL.Nat8);
+export const Time = IDL.Int;
+export const StudyMaterial = IDL.Record({
+  'id' : IDL.Text,
+  'title' : IDL.Text,
+  'file' : ExternalBlob,
+  'description' : IDL.Text,
+  'fileName' : IDL.Text,
+  'classLevel' : ClassLevel,
+  'courseId' : IDL.Text,
+  'uploadTime' : Time,
+  'uploadedBy' : IDL.Principal,
 });
 export const Course = IDL.Record({
   'id' : IDL.Text,
@@ -35,7 +59,6 @@ export const StudentProfile = IDL.Record({
   'classLevel' : ClassLevel,
   'enrolledCourses' : IDL.Vec(IDL.Text),
 });
-export const Time = IDL.Int;
 export const AttendanceRecord = IDL.Record({
   'present' : IDL.Bool,
   'date' : Time,
@@ -50,13 +73,47 @@ export const TestScore = IDL.Record({
 export const UserProfile = IDL.Record({ 'name' : IDL.Text, 'role' : IDL.Text });
 
 export const idlService = IDL.Service({
+  '_caffeineStorageBlobIsLive' : IDL.Func(
+      [IDL.Vec(IDL.Nat8)],
+      [IDL.Bool],
+      ['query'],
+    ),
+  '_caffeineStorageBlobsToDelete' : IDL.Func(
+      [],
+      [IDL.Vec(IDL.Vec(IDL.Nat8))],
+      ['query'],
+    ),
+  '_caffeineStorageConfirmBlobDeletion' : IDL.Func(
+      [IDL.Vec(IDL.Vec(IDL.Nat8))],
+      [],
+      [],
+    ),
+  '_caffeineStorageCreateCertificate' : IDL.Func(
+      [IDL.Text],
+      [_CaffeineStorageCreateCertificateResult],
+      [],
+    ),
+  '_caffeineStorageRefillCashier' : IDL.Func(
+      [IDL.Opt(_CaffeineStorageRefillInformation)],
+      [_CaffeineStorageRefillResult],
+      [],
+    ),
+  '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
   '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+  'addAdmin' : IDL.Func([IDL.Principal], [], []),
   'addCourse' : IDL.Func([IDL.Text, IDL.Text, IDL.Text, ClassLevel], [], []),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+  'deleteStudyMaterial' : IDL.Func([IDL.Text], [], []),
+  'downloadStudyMaterial' : IDL.Func([IDL.Text], [StudyMaterial], []),
   'editCourse' : IDL.Func([IDL.Text, IDL.Text, IDL.Text, ClassLevel], [], []),
   'enrollInCourse' : IDL.Func([IDL.Text], [], []),
   'getAllCourses' : IDL.Func([], [IDL.Vec(Course)], ['query']),
   'getAllStudents' : IDL.Func([], [IDL.Vec(StudentProfile)], ['query']),
+  'getAllStudyMaterials' : IDL.Func(
+      [IDL.Opt(IDL.Text), IDL.Opt(ClassLevel)],
+      [IDL.Vec(StudyMaterial)],
+      ['query'],
+    ),
   'getCallerAttendance' : IDL.Func([], [IDL.Vec(AttendanceRecord)], ['query']),
   'getCallerStudentProfile' : IDL.Func(
       [],
@@ -144,16 +201,58 @@ export const idlService = IDL.Service({
       [],
       [],
     ),
+  'updateStudyMaterial' : IDL.Func(
+      [IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, ClassLevel],
+      [],
+      [],
+    ),
+  'uploadStudyMaterial' : IDL.Func(
+      [
+        IDL.Text,
+        IDL.Text,
+        IDL.Text,
+        IDL.Text,
+        ExternalBlob,
+        IDL.Text,
+        ClassLevel,
+      ],
+      [],
+      [],
+    ),
 });
 
 export const idlInitArgs = [];
 
 export const idlFactory = ({ IDL }) => {
+  const _CaffeineStorageCreateCertificateResult = IDL.Record({
+    'method' : IDL.Text,
+    'blob_hash' : IDL.Text,
+  });
+  const _CaffeineStorageRefillInformation = IDL.Record({
+    'proposed_top_up_amount' : IDL.Opt(IDL.Nat),
+  });
+  const _CaffeineStorageRefillResult = IDL.Record({
+    'success' : IDL.Opt(IDL.Bool),
+    'topped_up_amount' : IDL.Opt(IDL.Nat),
+  });
   const ClassLevel = IDL.Nat;
   const UserRole = IDL.Variant({
     'admin' : IDL.Null,
     'user' : IDL.Null,
     'guest' : IDL.Null,
+  });
+  const ExternalBlob = IDL.Vec(IDL.Nat8);
+  const Time = IDL.Int;
+  const StudyMaterial = IDL.Record({
+    'id' : IDL.Text,
+    'title' : IDL.Text,
+    'file' : ExternalBlob,
+    'description' : IDL.Text,
+    'fileName' : IDL.Text,
+    'classLevel' : ClassLevel,
+    'courseId' : IDL.Text,
+    'uploadTime' : Time,
+    'uploadedBy' : IDL.Principal,
   });
   const Course = IDL.Record({
     'id' : IDL.Text,
@@ -170,7 +269,6 @@ export const idlFactory = ({ IDL }) => {
     'classLevel' : ClassLevel,
     'enrolledCourses' : IDL.Vec(IDL.Text),
   });
-  const Time = IDL.Int;
   const AttendanceRecord = IDL.Record({
     'present' : IDL.Bool,
     'date' : Time,
@@ -185,13 +283,47 @@ export const idlFactory = ({ IDL }) => {
   const UserProfile = IDL.Record({ 'name' : IDL.Text, 'role' : IDL.Text });
   
   return IDL.Service({
+    '_caffeineStorageBlobIsLive' : IDL.Func(
+        [IDL.Vec(IDL.Nat8)],
+        [IDL.Bool],
+        ['query'],
+      ),
+    '_caffeineStorageBlobsToDelete' : IDL.Func(
+        [],
+        [IDL.Vec(IDL.Vec(IDL.Nat8))],
+        ['query'],
+      ),
+    '_caffeineStorageConfirmBlobDeletion' : IDL.Func(
+        [IDL.Vec(IDL.Vec(IDL.Nat8))],
+        [],
+        [],
+      ),
+    '_caffeineStorageCreateCertificate' : IDL.Func(
+        [IDL.Text],
+        [_CaffeineStorageCreateCertificateResult],
+        [],
+      ),
+    '_caffeineStorageRefillCashier' : IDL.Func(
+        [IDL.Opt(_CaffeineStorageRefillInformation)],
+        [_CaffeineStorageRefillResult],
+        [],
+      ),
+    '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
     '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+    'addAdmin' : IDL.Func([IDL.Principal], [], []),
     'addCourse' : IDL.Func([IDL.Text, IDL.Text, IDL.Text, ClassLevel], [], []),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+    'deleteStudyMaterial' : IDL.Func([IDL.Text], [], []),
+    'downloadStudyMaterial' : IDL.Func([IDL.Text], [StudyMaterial], []),
     'editCourse' : IDL.Func([IDL.Text, IDL.Text, IDL.Text, ClassLevel], [], []),
     'enrollInCourse' : IDL.Func([IDL.Text], [], []),
     'getAllCourses' : IDL.Func([], [IDL.Vec(Course)], ['query']),
     'getAllStudents' : IDL.Func([], [IDL.Vec(StudentProfile)], ['query']),
+    'getAllStudyMaterials' : IDL.Func(
+        [IDL.Opt(IDL.Text), IDL.Opt(ClassLevel)],
+        [IDL.Vec(StudyMaterial)],
+        ['query'],
+      ),
     'getCallerAttendance' : IDL.Func(
         [],
         [IDL.Vec(AttendanceRecord)],
@@ -279,6 +411,24 @@ export const idlFactory = ({ IDL }) => {
           ContactInfo,
           ParentContact,
           IDL.Opt(IDL.Vec(IDL.Text)),
+        ],
+        [],
+        [],
+      ),
+    'updateStudyMaterial' : IDL.Func(
+        [IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, ClassLevel],
+        [],
+        [],
+      ),
+    'uploadStudyMaterial' : IDL.Func(
+        [
+          IDL.Text,
+          IDL.Text,
+          IDL.Text,
+          IDL.Text,
+          ExternalBlob,
+          IDL.Text,
+          ClassLevel,
         ],
         [],
         [],

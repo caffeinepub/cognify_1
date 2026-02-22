@@ -23,6 +23,7 @@ export interface Course {
   'description' : string,
   'classLevel' : ClassLevel,
 }
+export type ExternalBlob = Uint8Array;
 export interface ParentContact { 'name' : string, 'phone' : string }
 export interface StudentProfile {
   'contact' : ContactInfo,
@@ -30,6 +31,17 @@ export interface StudentProfile {
   'name' : string,
   'classLevel' : ClassLevel,
   'enrolledCourses' : Array<string>,
+}
+export interface StudyMaterial {
+  'id' : string,
+  'title' : string,
+  'file' : ExternalBlob,
+  'description' : string,
+  'fileName' : string,
+  'classLevel' : ClassLevel,
+  'courseId' : string,
+  'uploadTime' : Time,
+  'uploadedBy' : Principal,
 }
 export interface TestScore {
   'maxScore' : bigint,
@@ -42,14 +54,47 @@ export interface UserProfile { 'name' : string, 'role' : string }
 export type UserRole = { 'admin' : null } |
   { 'user' : null } |
   { 'guest' : null };
+export interface _CaffeineStorageCreateCertificateResult {
+  'method' : string,
+  'blob_hash' : string,
+}
+export interface _CaffeineStorageRefillInformation {
+  'proposed_top_up_amount' : [] | [bigint],
+}
+export interface _CaffeineStorageRefillResult {
+  'success' : [] | [boolean],
+  'topped_up_amount' : [] | [bigint],
+}
 export interface _SERVICE {
+  '_caffeineStorageBlobIsLive' : ActorMethod<[Uint8Array], boolean>,
+  '_caffeineStorageBlobsToDelete' : ActorMethod<[], Array<Uint8Array>>,
+  '_caffeineStorageConfirmBlobDeletion' : ActorMethod<
+    [Array<Uint8Array>],
+    undefined
+  >,
+  '_caffeineStorageCreateCertificate' : ActorMethod<
+    [string],
+    _CaffeineStorageCreateCertificateResult
+  >,
+  '_caffeineStorageRefillCashier' : ActorMethod<
+    [[] | [_CaffeineStorageRefillInformation]],
+    _CaffeineStorageRefillResult
+  >,
+  '_caffeineStorageUpdateGatewayPrincipals' : ActorMethod<[], undefined>,
   '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
+  'addAdmin' : ActorMethod<[Principal], undefined>,
   'addCourse' : ActorMethod<[string, string, string, ClassLevel], undefined>,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
+  'deleteStudyMaterial' : ActorMethod<[string], undefined>,
+  'downloadStudyMaterial' : ActorMethod<[string], StudyMaterial>,
   'editCourse' : ActorMethod<[string, string, string, ClassLevel], undefined>,
   'enrollInCourse' : ActorMethod<[string], undefined>,
   'getAllCourses' : ActorMethod<[], Array<Course>>,
   'getAllStudents' : ActorMethod<[], Array<StudentProfile>>,
+  'getAllStudyMaterials' : ActorMethod<
+    [[] | [string], [] | [ClassLevel]],
+    Array<StudyMaterial>
+  >,
   'getCallerAttendance' : ActorMethod<[], Array<AttendanceRecord>>,
   'getCallerStudentProfile' : ActorMethod<[], [] | [StudentProfile]>,
   'getCallerTestScores' : ActorMethod<[], Array<TestScore>>,
@@ -90,6 +135,14 @@ export interface _SERVICE {
       ParentContact,
       [] | [Array<string>],
     ],
+    undefined
+  >,
+  'updateStudyMaterial' : ActorMethod<
+    [string, string, string, string, string, ClassLevel],
+    undefined
+  >,
+  'uploadStudyMaterial' : ActorMethod<
+    [string, string, string, string, ExternalBlob, string, ClassLevel],
     undefined
   >,
 }

@@ -1,17 +1,14 @@
 # Specification
 
 ## Summary
-**Goal:** Build a student management platform for Cognify that enables student registration, course enrollment, attendance tracking, test results management, and admin oversight with role-based authentication.
+**Goal:** Add study material upload functionality for admins and a download area for students, and display a contact phone number in the footer.
 
 **Planned changes:**
-- Create student registration system with name, class (6-10), contact number, email, and parent contact information
-- Implement student profile management for viewing and updating personal information and enrolled courses
-- Build course enrollment system supporting Foundation Building courses (Class 6-8: Mathematics, Science, Basic Concept Development, Activity-Based Learning) and Board Preparation courses (Class 9-10: Complete NCERT Coverage, Mathematics, Science including Physics/Chemistry/Biology)
-- Create attendance tracking system where admins mark daily attendance and students view their attendance history and percentage
-- Implement test results and progress tracking with weekly test scores and performance trends
-- Build admin dashboard with overview of total students, course enrollments, attendance statistics, and test performance summaries
-- Implement admin student management interface with search, filter, detailed profiles, and editing capabilities
-- Create admin course management interface for adding, editing courses and viewing enrollment counts
-- Design modern, education-focused visual theme with warm, welcoming colors (avoiding blue and purple), clean typography, and consistent layout conveying academic professionalism
+- Create backend data type and CRUD functions for study materials (upload, retrieve, update, delete)
+- Build admin page at /admin/materials for uploading and managing study materials with filtering by course and class level
+- Create student page at /materials displaying available study materials filtered by enrolled courses with download capability
+- Add React Query hooks for all study material operations
+- Update navigation menus with new study materials links
+- Add phone number 7780951766 to the footer
 
-**User-visible outcome:** Students can register, enroll in courses appropriate for their class level (6-10), view their profile with attendance records and test scores. Admins can manage students and courses, mark attendance, record test results, and view comprehensive dashboard analytics. The platform features a warm, professional academic design aligned with Cognify's "From Rote to Reason" mission.
+**User-visible outcome:** Admins can upload educational documents (PDF, DOC, DOCX, PPT, PPTX) associated with courses and class levels. Students can view and download study materials relevant to their enrolled courses. The contact phone number is visible in the footer.

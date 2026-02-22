@@ -1,7 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useActor } from './useActor';
 import { Principal } from '@dfinity/principal';
-import type { StudentProfile, Course, AttendanceRecord, TestScore, UserProfile, ContactInfo, ParentContact } from '../backend';
+import type { StudentProfile, Course, AttendanceRecord, TestScore, UserProfile, ContactInfo, ParentContact, StudyMaterial } from '../backend';
+import { ExternalBlob } from '../backend';
 import { toast } from 'sonner';
 
 // User Profile Queries
@@ -70,6 +71,27 @@ export function useIsCallerAdmin() {
   });
 }
 
+// Admin Management
+export function useAddAdmin() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (principalId: string) => {
+      if (!actor) throw new Error('Actor not available');
+      const principal = Principal.fromText(principalId);
+      return actor.addAdmin(principal);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['isCallerAdmin'] });
+      toast.success('Admin added successfully');
+    },
+    onError: (error: Error) => {
+      toast.error(`Failed to add admin: ${error.message}`);
+    }
+  });
+}
+
 // Student Profile Queries
 export function useGetCallerStudentProfile() {
   const { actor, isFetching: actorFetching } = useActor();
@@ -81,6 +103,20 @@ export function useGetCallerStudentProfile() {
       return actor.getCallerStudentProfile();
     },
     enabled: !!actor && !actorFetching,
+  });
+}
+
+export function useGetStudentProfile(principalId: string | null) {
+  const { actor, isFetching: actorFetching } = useActor();
+
+  return useQuery<StudentProfile | null>({
+    queryKey: ['studentProfile', principalId],
+    queryFn: async () => {
+      if (!actor || !principalId) return null;
+      const principal = Principal.fromText(principalId);
+      return actor.getStudentProfile(principal);
+    },
+    enabled: !!actor && !actorFetching && principalId !== null,
   });
 }
 
@@ -202,6 +238,7 @@ export function useAddCourse() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['allCourses'] });
+      queryClient.invalidateQueries({ queryKey: ['coursesForClass'] });
       toast.success('Course added successfully');
     },
     onError: (error: Error) => {
@@ -221,6 +258,7 @@ export function useEditCourse() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['allCourses'] });
+      queryClient.invalidateQueries({ queryKey: ['coursesForClass'] });
       toast.success('Course updated successfully');
     },
     onError: (error: Error) => {
@@ -250,9 +288,10 @@ export function useGetStudentAttendance(studentId: string | null) {
     queryKey: ['studentAttendance', studentId],
     queryFn: async () => {
       if (!actor || !studentId) return [];
-      return actor.getStudentAttendance(Principal.fromText(studentId));
+      const principal = Principal.fromText(studentId);
+      return actor.getStudentAttendance(principal);
     },
-    enabled: !!actor && !actorFetching && !!studentId,
+    enabled: !!actor && !actorFetching && studentId !== null,
   });
 }
 
@@ -261,9 +300,9 @@ export function useMarkAttendance() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (data: { studentId: string; courseId: string; present: boolean }) => {
+    mutationFn: async (data: { studentId: Principal; courseId: string; present: boolean }) => {
       if (!actor) throw new Error('Actor not available');
-      return actor.markAttendance(Principal.fromText(data.studentId), data.courseId, data.present);
+      return actor.markAttendance(data.studentId, data.courseId, data.present);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['studentAttendance'] });
@@ -296,9 +335,10 @@ export function useGetStudentTestScores(studentId: string | null) {
     queryKey: ['studentTestScores', studentId],
     queryFn: async () => {
       if (!actor || !studentId) return [];
-      return actor.getStudentTestScores(Principal.fromText(studentId));
+      const principal = Principal.fromText(studentId);
+      return actor.getStudentTestScores(principal);
     },
-    enabled: !!actor && !actorFetching && !!studentId,
+    enabled: !!actor && !actorFetching && studentId !== null,
   });
 }
 
@@ -307,14 +347,9 @@ export function useRecordTestScore() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (data: { studentId: string; courseId: string; score: bigint; maxScore: bigint }) => {
+    mutationFn: async (data: { studentId: Principal; courseId: string; score: bigint; maxScore: bigint }) => {
       if (!actor) throw new Error('Actor not available');
-      return actor.recordTestScore(
-        Principal.fromText(data.studentId),
-        data.courseId,
-        data.score,
-        data.maxScore
-      );
+      return actor.recordTestScore(data.studentId, data.courseId, data.score, data.maxScore);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['studentTestScores'] });
@@ -326,7 +361,7 @@ export function useRecordTestScore() {
   });
 }
 
-// Admin Student Management
+// Admin Student Queries
 export function useGetAllStudents() {
   const { actor, isFetching: actorFetching } = useActor();
 
@@ -337,19 +372,6 @@ export function useGetAllStudents() {
       return actor.getAllStudents();
     },
     enabled: !!actor && !actorFetching,
-  });
-}
-
-export function useSearchStudentsByName(searchTerm: string) {
-  const { actor, isFetching: actorFetching } = useActor();
-
-  return useQuery<StudentProfile[]>({
-    queryKey: ['searchStudents', searchTerm],
-    queryFn: async () => {
-      if (!actor || !searchTerm) return [];
-      return actor.searchStudentsByName(searchTerm);
-    },
-    enabled: !!actor && !actorFetching && searchTerm.length > 0,
   });
 }
 
@@ -366,54 +388,19 @@ export function useGetStudentsByClass(classLevel: bigint | null) {
   });
 }
 
-export function useGetStudentProfile(studentId: string | null) {
+export function useSearchStudentsByName(searchTerm: string) {
   const { actor, isFetching: actorFetching } = useActor();
 
-  return useQuery<StudentProfile | null>({
-    queryKey: ['studentProfile', studentId],
+  return useQuery<StudentProfile[]>({
+    queryKey: ['searchStudents', searchTerm],
     queryFn: async () => {
-      if (!actor || !studentId) return null;
-      return actor.getStudentProfile(Principal.fromText(studentId));
+      if (!actor || !searchTerm) return [];
+      return actor.searchStudentsByName(searchTerm);
     },
-    enabled: !!actor && !actorFetching && !!studentId,
+    enabled: !!actor && !actorFetching && searchTerm.length > 0,
   });
 }
 
-export function useUpdateStudentProfile() {
-  const { actor } = useActor();
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (data: {
-      studentId: string;
-      name: string;
-      classLevel: bigint;
-      contact: ContactInfo;
-      parentContact: ParentContact;
-      enrolledCourses: string[] | null;
-    }) => {
-      if (!actor) throw new Error('Actor not available');
-      return actor.updateStudentProfile(
-        Principal.fromText(data.studentId),
-        data.name,
-        data.classLevel,
-        data.contact,
-        data.parentContact,
-        data.enrolledCourses
-      );
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['studentProfile'] });
-      queryClient.invalidateQueries({ queryKey: ['allStudents'] });
-      toast.success('Student profile updated successfully');
-    },
-    onError: (error: Error) => {
-      toast.error(`Failed to update student profile: ${error.message}`);
-    }
-  });
-}
-
-// Dashboard Stats
 export function useGetDashboardStats() {
   const { actor, isFetching: actorFetching } = useActor();
 
@@ -424,5 +411,138 @@ export function useGetDashboardStats() {
       return actor.getDashboardStats();
     },
     enabled: !!actor && !actorFetching,
+  });
+}
+
+// Study Material Queries
+export function useStudyMaterials(courseId?: string | null, classLevel?: bigint | null) {
+  const { actor, isFetching: actorFetching } = useActor();
+
+  return useQuery<StudyMaterial[]>({
+    queryKey: ['studyMaterials', courseId, classLevel?.toString()],
+    queryFn: async () => {
+      if (!actor) return [];
+      return actor.getAllStudyMaterials(courseId || null, classLevel || null);
+    },
+    enabled: !!actor && !actorFetching,
+  });
+}
+
+export function useUploadStudyMaterial() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (data: {
+      id: string;
+      title: string;
+      description: string;
+      fileName: string;
+      file: ExternalBlob;
+      courseId: string;
+      classLevel: bigint;
+    }) => {
+      if (!actor) throw new Error('Actor not available');
+      return actor.uploadStudyMaterial(
+        data.id,
+        data.title,
+        data.description,
+        data.fileName,
+        data.file,
+        data.courseId,
+        data.classLevel
+      );
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['studyMaterials'] });
+      toast.success('Study material uploaded successfully');
+    },
+    onError: (error: Error) => {
+      toast.error(`Failed to upload material: ${error.message}`);
+    }
+  });
+}
+
+export function useUpdateStudyMaterial() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (data: {
+      id: string;
+      title: string;
+      description: string;
+      fileName: string;
+      courseId: string;
+      classLevel: bigint;
+    }) => {
+      if (!actor) throw new Error('Actor not available');
+      return actor.updateStudyMaterial(
+        data.id,
+        data.title,
+        data.description,
+        data.fileName,
+        data.courseId,
+        data.classLevel
+      );
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['studyMaterials'] });
+      toast.success('Study material updated successfully');
+    },
+    onError: (error: Error) => {
+      toast.error(`Failed to update material: ${error.message}`);
+    }
+  });
+}
+
+export function useDeleteStudyMaterial() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: string) => {
+      if (!actor) throw new Error('Actor not available');
+      return actor.deleteStudyMaterial(id);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['studyMaterials'] });
+      toast.success('Study material deleted successfully');
+    },
+    onError: (error: Error) => {
+      toast.error(`Failed to delete material: ${error.message}`);
+    }
+  });
+}
+
+export function useDownloadStudyMaterial() {
+  const { actor } = useActor();
+
+  return useMutation({
+    mutationFn: async (id: string) => {
+      if (!actor) throw new Error('Actor not available');
+      const material = await actor.downloadStudyMaterial(id);
+      
+      // Get bytes from ExternalBlob and trigger download
+      const bytes = await material.file.getBytes();
+      const blob = new Blob([bytes]);
+      const url = URL.createObjectURL(blob);
+      
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = material.fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      
+      return material;
+    },
+    onSuccess: () => {
+      toast.success('Download started');
+    },
+    onError: (error: Error) => {
+      toast.error(`Failed to download material: ${error.message}`);
+    }
   });
 }

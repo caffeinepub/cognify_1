@@ -1,15 +1,15 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 3,
+  "projectStateVersion": 7,
   "summary": "Student Management Platform for Cognify coaching institute including student registration/profiles, course enrollment system, attendance tracking, test results/progress reports, and admin dashboard",
   "architectural_notes": [
     "Building a student management platform for Cognify coaching institute",
     "Target users: students (Class 6-10), educators, and admin staff",
-    "Core functionality: registration, enrollment, attendance, progress tracking"
+    "Core functionality: registration, enrollment, attendance, progress tracking",
+    "Study material upload system for admins to share resources with students"
   ],
   "known_issues": [],
   "isFixRequest": false,
-  "imageRequirements": "## Required Images\n- Cognify logo featuring book and lightbulb symbolizing understanding over memorization (cognify-logo.dim_200x200.png)\n- Hero section background with abstract educational pattern in warm tones (hero-bg.dim_1200x600.png)\n- Dashboard illustration showing student progress analytics (dashboard-hero.dim_800x500.png)",
   "existing_features": [
     {
       "id": "feature-create-student-registration-system-allowing-new-students-to-sign-up-with-name-class-6-10-contact-number-email-and-parent-contact-information",
@@ -82,6 +82,78 @@
         "REQ-9"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-create-an-admin-setup-page-accessible-via-url-parameter-e-g-setup-admin-that-allows-the-first-time-setup-of-admin-accounts-by-entering-internet-identity-principals",
+      "title": "Create an admin setup page accessible via URL parameter (e.g., ?setup=admin) that allows the first-time setup of admin accounts by entering Internet Identity principals",
+      "reqIds": [
+        "REQ-11"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-an-admin-settings-page-where-existing-admins-can-view-the-list-of-all-admin-principals-and-add-or-remove-admin-privileges-for-other-users",
+      "title": "Add an admin settings page where existing admins can view the list of all admin principals and add or remove admin privileges for other users",
+      "reqIds": [
+        "REQ-13"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-help-document-or-info-section-on-the-login-page-that-explains-how-to-access-the-platform-as-an-owner-including-instructions-for-internet-identity-setup-and-obtaining-principal-ids",
+      "title": "Create a help document or info section on the login page that explains how to access the platform as an owner, including instructions for Internet Identity setup and obtaining principal IDs",
+      "reqIds": [
+        "REQ-14"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-an-admin-study-materials-management-page-at-admin-materials-that-displays-all-uploaded-materials-in-a-table-with-columns-for-title-description-course-class-level-upload-date-and-actions-edit-delete",
+      "title": "Create an admin study materials management page at /admin/materials that displays all uploaded materials in a table with columns for title, description, course, class level, upload date, and actions (edit, delete)",
+      "reqIds": [
+        "REQ-18"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-an-upload-study-material-dialog-on-the-admin-materials-page-with-a-form-that-includes-fields-for-title-description-course-selection-class-level-selection-and-file-upload-input-accepting-pdf-doc-docx-ppt-pptx-file-types",
+      "title": "Add an upload study material dialog on the admin materials page with a form that includes fields for title, description, course selection, class level selection, and file upload input accepting PDF, DOC, DOCX, PPT, PPTX file types",
+      "reqIds": [
+        "REQ-19"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-react-query-hooks-for-study-material-operations-including-usestudymaterials-for-fetching-all-materials-with-filters-useuploadstudymaterial-for-admin-uploads-useupdatestudymaterial-for-editing-usedeletestudymaterial-for-deletion-and-usedownloadstudymaterial-for-student-downloads",
+      "title": "Create React Query hooks for study material operations including useStudyMaterials for fetching all materials with filters, useUploadStudyMaterial for admin uploads, useUpdateStudyMaterial for editing, useDeleteStudyMaterial for deletion, and useDownloadStudyMaterial for student downloads",
+      "reqIds": [
+        "REQ-20"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-student-facing-study-materials-page-at-materials-that-displays-available-study-materials-filtered-by-the-student-s-enrolled-courses-and-class-level-with-download-buttons-for-each-material",
+      "title": "Add a student-facing study materials page at /materials that displays available study materials filtered by the student's enrolled courses and class level, with download buttons for each material",
+      "reqIds": [
+        "REQ-21"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-layout-component-navigation-to-include-a-study-materials-link-in-the-student-menu-pointing-to-materials-and-an-upload-materials-link-in-the-admin-menu-pointing-to-admin-materials",
+      "title": "Update the Layout component navigation to include a 'Study Materials' link in the student menu pointing to /materials and an 'Upload Materials' link in the admin menu pointing to /admin/materials",
+      "reqIds": [
+        "REQ-22"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-the-phone-number-7780951766-as-a-contact-phone-number-displayed-in-the-footer-of-the-layout-component-alongside-existing-branding-and-social-links",
+      "title": "Add the phone number 7780951766 as a contact phone number displayed in the footer of the Layout component alongside existing branding and social links",
+      "reqIds": [
+        "REQ-23"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -113,6 +185,64 @@
       "id": "AR-5",
       "summary": "Admin dashboard for managing students",
       "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Check/modify admin authentication setup to enable owner access",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Add a backend function that allows the system to designate specific Internet Identity principals as administrators, with the ability to add/remove admin privileges programmatically",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-9",
+      "summary": "Update the useActor hook to automatically grant admin privileges to the first authenticated user if no admins exist in the system",
+      "reqIds": [
+        "REQ-12"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-10",
+      "summary": "Add study material upload functionality for admins",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-11",
+      "summary": "Add phone number 7780951766 to platform configuration",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-12",
+      "summary": "Create a backend data type for study materials that includes fields for material ID, title, description, file name, file content (as Blob), course ID association, class level, upload timestamp, and uploader principal",
+      "reqIds": [
+        "REQ-15"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-13",
+      "summary": "Implement backend functions for admins to upload study materials (create), retrieve all study materials with filtering by course and class level (read), update material metadata (update), and delete materials (delete)",
+      "reqIds": [
+        "REQ-16"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-14",
+      "summary": "Add backend function for students to download study materials by material ID, returning the file content and metadata",
+      "reqIds": [
+        "REQ-17"
+      ],
       "status": "pending"
     }
   ],

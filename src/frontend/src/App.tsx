@@ -8,12 +8,16 @@ import StudentProfilePage from './pages/StudentProfilePage';
 import CoursesPage from './pages/CoursesPage';
 import AttendancePage from './pages/AttendancePage';
 import TestResultsPage from './pages/TestResultsPage';
+import MaterialsPage from './pages/MaterialsPage';
 import AdminDashboardPage from './pages/AdminDashboardPage';
 import AdminStudentsPage from './pages/AdminStudentsPage';
 import AdminStudentDetailPage from './pages/AdminStudentDetailPage';
 import AdminCoursesPage from './pages/AdminCoursesPage';
 import AdminAttendancePage from './pages/AdminAttendancePage';
 import AdminTestScoresPage from './pages/AdminTestScoresPage';
+import AdminMaterialsPage from './pages/AdminMaterialsPage';
+import AdminSetupPage from './pages/AdminSetupPage';
+import AdminSettingsPage from './pages/AdminSettingsPage';
 import UserProfileSetup from './components/UserProfileSetup';
 import { Toaster } from '@/components/ui/sonner';
 
@@ -64,6 +68,12 @@ const testResultsRoute = createRoute({
   component: TestResultsPage
 });
 
+const materialsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/materials',
+  component: MaterialsPage
+});
+
 const adminDashboardRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/admin/dashboard',
@@ -100,6 +110,24 @@ const adminTestScoresRoute = createRoute({
   component: AdminTestScoresPage
 });
 
+const adminMaterialsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/admin/materials',
+  component: AdminMaterialsPage
+});
+
+const adminSetupRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/admin-setup',
+  component: AdminSetupPage
+});
+
+const adminSettingsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/admin/settings',
+  component: AdminSettingsPage
+});
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
   registerRoute,
@@ -107,12 +135,16 @@ const routeTree = rootRoute.addChildren([
   coursesRoute,
   attendanceRoute,
   testResultsRoute,
+  materialsRoute,
   adminDashboardRoute,
   adminStudentsRoute,
   adminStudentDetailRoute,
   adminCoursesRoute,
   adminAttendanceRoute,
-  adminTestScoresRoute
+  adminTestScoresRoute,
+  adminMaterialsRoute,
+  adminSetupRoute,
+  adminSettingsRoute
 ]);
 
 const router = createRouter({ routeTree });

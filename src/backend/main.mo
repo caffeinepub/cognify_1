@@ -8,8 +8,12 @@ import Principal "mo:core/Principal";
 import Runtime "mo:core/Runtime";
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
+import Storage "blob-storage/Storage";
+import MixinStorage "blob-storage/Mixin";
 
 actor {
+  include MixinStorage();
+
   type ClassLevel = Nat; // 6-10
 
   type ContactInfo = {
@@ -86,9 +90,32 @@ actor {
   let testScores = Map.empty<Principal, [TestScore]>();
   let userProfiles = Map.empty<Principal, UserProfile>();
 
+  // Study Material
+  type StudyMaterial = {
+    id : Text;
+    title : Text;
+    description : Text;
+    fileName : Text;
+    file : Storage.ExternalBlob;
+    courseId : Text;
+    classLevel : ClassLevel;
+    uploadTime : Time.Time;
+    uploadedBy : Principal;
+  };
+
+  let studyMaterials = Map.empty<Text, StudyMaterial>();
+
   // Authorization system
   let accessControlState = AccessControl.initState();
   include MixinAuthorization(accessControlState);
+
+  // Add Admin Functionality
+  public shared ({ caller }) func addAdmin(newAdmin : Principal) : async () {
+    if (not AccessControl.isAdmin(accessControlState, caller)) {
+      Runtime.trap("Unauthorized: Only current admins can add new admins");
+    };
+    AccessControl.assignRole(accessControlState, caller, newAdmin, #admin);
+  };
 
   // Required user profile functions
   public query ({ caller }) func getCallerUserProfile() : async ?UserProfile {
@@ -422,6 +449,121 @@ actor {
     {
       totalStudents = studentProfiles.size();
       totalCourses = courses.size();
+    };
+  };
+
+  // Study Material Management (Admin only)
+  // Upload new material
+  public shared ({ caller }) func uploadStudyMaterial(
+    id : Text,
+    title : Text,
+    description : Text,
+    fileName : Text,
+    file : Storage.ExternalBlob,
+    courseId : Text,
+    classLevel : ClassLevel,
+  ) : async () {
+    if (not AccessControl.isAdmin(accessControlState, caller)) {
+      Runtime.trap("Unauthorized: Only admins can upload study materials");
+    };
+
+    let material : StudyMaterial = {
+      id;
+      title;
+      description;
+      fileName;
+      file;
+      courseId;
+      classLevel;
+      uploadTime = Time.now();
+      uploadedBy = caller;
+    };
+    studyMaterials.add(id, material);
+  };
+
+  // Update material metadata
+  public shared ({ caller }) func updateStudyMaterial(
+    id : Text,
+    title : Text,
+    description : Text,
+    fileName : Text,
+    courseId : Text,
+    classLevel : ClassLevel,
+  ) : async () {
+    if (not AccessControl.isAdmin(accessControlState, caller)) {
+      Runtime.trap("Unauthorized: Only admins can update study materials");
+    };
+
+    switch (studyMaterials.get(id)) {
+      case (null) { Runtime.trap("Study material not found") };
+      case (?existingMaterial) {
+        let updatedMaterial : StudyMaterial = {
+          id;
+          title;
+          description;
+          fileName;
+          file = existingMaterial.file;
+          courseId;
+          classLevel;
+          uploadTime = Time.now();
+          uploadedBy = existingMaterial.uploadedBy;
+        };
+        studyMaterials.add(id, updatedMaterial);
+      };
+    };
+  };
+
+  // Delete material
+  public shared ({ caller }) func deleteStudyMaterial(id : Text) : async () {
+    if (not AccessControl.isAdmin(accessControlState, caller)) {
+      Runtime.trap("Unauthorized: Only admins can delete study materials");
+    };
+
+    switch (studyMaterials.get(id)) {
+      case (null) { Runtime.trap("Study material not found") };
+      case (?_) {
+        studyMaterials.remove(id);
+      };
+    };
+  };
+
+  // Retrieve all materials with filtering (Students can view)
+  public query ({ caller }) func getAllStudyMaterials(
+    courseId : ?Text,
+    classLevel : ?ClassLevel,
+  ) : async [StudyMaterial] {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can view study materials");
+    };
+
+    var materials = studyMaterials.values().toArray();
+
+    switch (courseId) {
+      case (null) {};
+      case (?id) {
+        materials := materials.filter(func(material) { material.courseId == id });
+      };
+    };
+
+    switch (classLevel) {
+      case (null) {};
+      case (?level) {
+        materials := materials.filter(func(material) { material.classLevel == level });
+      };
+    };
+
+    materials;
+  };
+
+  // Download material (Students can download)
+  public shared ({ caller }) func downloadStudyMaterial(id : Text) : async StudyMaterial {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can download study materials");
+    };
+
+    switch (studyMaterials.get(id)) {
+      case (null) { Runtime.trap("Study material not found") };
+      case (?material) { material };
     };
   };
 };

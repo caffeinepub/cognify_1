@@ -1,181 +1,198 @@
 {
   "kind": "build_request",
-  "title": "Build Student Management Platform for Cognify",
-  "projectName": "Cognify",
+  "title": "Add study material upload functionality and configure phone number",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-1",
-      "text": "Create student registration system allowing new students to sign up with name, class (6-10), contact number, email, and parent contact information",
-      "target": "both",
+      "id": "REQ-15",
+      "text": "Create a backend data type for study materials that includes fields for material ID, title, description, file name, file content (as Blob), course ID association, class level, upload timestamp, and uploader principal",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-user-option1"
+          "msg-6"
+        ],
+        "quotes": [
+          "Add place where i can upload study material"
         ]
       },
       "acceptanceCriteria": [
-        "Students can register with all required fields",
-        "Form validation ensures valid email and phone formats",
-        "Successful registration creates a student profile",
-        "Registration is accessible without authentication"
+        "StudyMaterial type is defined in backend/main.mo",
+        "Type includes all necessary fields for managing uploaded materials",
+        "Materials can be associated with specific courses and class levels"
       ]
     },
     {
-      "id": "REQ-2",
-      "text": "Implement student profile management where students can view and update their personal information, enrolled courses, and contact details",
-      "target": "both",
+      "id": "REQ-16",
+      "text": "Implement backend functions for admins to upload study materials (create), retrieve all study materials with filtering by course and class level (read), update material metadata (update), and delete materials (delete)",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-user-option1"
+          "msg-6"
+        ],
+        "quotes": [
+          "Add place where i can upload study material"
         ]
       },
       "acceptanceCriteria": [
-        "Authenticated students can view their complete profile",
-        "Students can edit contact information and parent details",
-        "Profile displays current enrolled courses",
-        "Changes are persisted in the backend"
+        "Admin-only functions are implemented with proper authorization checks",
+        "Upload function accepts file content as Blob with metadata",
+        "Retrieve functions support filtering by course ID and class level",
+        "Update function allows modifying title, description, and course association",
+        "Delete function removes materials by ID"
       ]
     },
     {
-      "id": "REQ-3",
-      "text": "Build course enrollment system supporting courses for Class 6-8 (Foundation Building: Mathematics, Science, Basic Concept Development, Activity-Based Learning) and Class 9-10 (Board Preparation: Complete NCERT Coverage, Mathematics, Science including Physics/Chemistry/Biology)",
-      "target": "both",
+      "id": "REQ-17",
+      "text": "Add backend function for students to download study materials by material ID, returning the file content and metadata",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-user-courses"
+          "msg-6"
+        ],
+        "quotes": [
+          "Add place where i can upload study material"
         ]
       },
       "acceptanceCriteria": [
-        "Students can browse available courses filtered by their class level",
-        "Each course displays name, description, and class level",
-        "Students can enroll in multiple courses",
-        "Enrollment is tracked per student",
-        "Students cannot enroll in courses outside their class level"
+        "Function is accessible to authenticated students",
+        "Returns file content as Blob along with filename and content type",
+        "Students can only access materials for their enrolled courses or class level"
       ]
     },
     {
-      "id": "REQ-4",
-      "text": "Create attendance tracking system where admins can mark daily attendance for each student by course, and students can view their attendance history and percentage",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-user-option1"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Admins can mark attendance (present/absent) for students by date and course",
-        "Students can view their attendance records with dates",
-        "Attendance percentage is calculated and displayed",
-        "Attendance data is organized by course",
-        "Historical attendance records are preserved"
-      ]
-    },
-    {
-      "id": "REQ-5",
-      "text": "Implement test results and progress tracking where admins can record test scores for weekly tests, and students can view their test history, scores, and performance trends",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-user-option1"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Admins can create tests with name, date, subject, and maximum marks",
-        "Admins can record scores for each student per test",
-        "Students can view all their test results with scores and dates",
-        "System displays performance trends or average scores",
-        "Test results are organized by subject/course"
-      ]
-    },
-    {
-      "id": "REQ-6",
-      "text": "Build admin dashboard with role-based authentication providing overview of total students, course enrollments, attendance statistics, and test performance summaries",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-user-option1"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Admin role can access the dashboard after authentication",
-        "Dashboard displays total number of registered students",
-        "Dashboard shows enrollment counts per course",
-        "Dashboard includes attendance statistics (overall percentage, trends)",
-        "Dashboard displays recent test performance summaries",
-        "Regular students cannot access admin features"
-      ]
-    },
-    {
-      "id": "REQ-7",
-      "text": "Implement admin student management interface allowing admins to view all students, search/filter by name or class, view detailed student profiles including enrollment and performance data, and edit student information",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-user-option1"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Admins can view a list of all registered students",
-        "List includes search by name and filter by class functionality",
-        "Clicking a student shows detailed profile with courses, attendance, and test scores",
-        "Admins can edit student contact information and class level",
-        "Changes are saved and reflected immediately"
-      ]
-    },
-    {
-      "id": "REQ-8",
-      "text": "Create admin course management interface allowing admins to add new courses, edit course details (name, description, class level), and view enrollment counts per course",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-user-courses"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Admins can create new courses with name, description, and class level",
-        "Admins can edit existing course information",
-        "Course list shows current enrollment count for each course",
-        "Course changes are persisted and immediately visible to students"
-      ]
-    },
-    {
-      "id": "REQ-9",
-      "text": "Design a modern, education-focused visual theme with a professional academic aesthetic using warm, welcoming colors (avoiding blue and purple), clean typography suitable for an educational institution, and consistent spacing and layout patterns that convey trust and clarity",
+      "id": "REQ-18",
+      "text": "Create an admin study materials management page at /admin/materials that displays all uploaded materials in a table with columns for title, description, course, class level, upload date, and actions (edit, delete)",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-context"
+          "msg-6"
+        ],
+        "quotes": [
+          "Add place where i can upload study material"
         ]
       },
       "acceptanceCriteria": [
-        "Color scheme uses warm, professional tones appropriate for education",
-        "Typography is clear and readable for all age groups",
-        "Layout creates a sense of structure and academic professionalism",
-        "Design is consistent across all pages and components",
-        "Visual style supports the 'From Rote to Reason' mission"
+        "Page is accessible only to admin users",
+        "Table displays all study materials with filtering options by course and class level",
+        "Edit and delete actions are functional with confirmation dialogs",
+        "Page follows the existing admin page design patterns"
+      ]
+    },
+    {
+      "id": "REQ-19",
+      "text": "Add an upload study material dialog on the admin materials page with a form that includes fields for title, description, course selection, class level selection, and file upload input accepting PDF, DOC, DOCX, PPT, PPTX file types",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-6"
+        ],
+        "quotes": [
+          "Add place where i can upload study material"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Dialog opens from a prominent 'Upload Material' button",
+        "Form validates all required fields before submission",
+        "File input restricts to educational document types",
+        "File size limit is enforced (e.g., 10MB maximum)",
+        "Success/error toasts display after upload attempt"
+      ]
+    },
+    {
+      "id": "REQ-20",
+      "text": "Create React Query hooks for study material operations including useStudyMaterials for fetching all materials with filters, useUploadStudyMaterial for admin uploads, useUpdateStudyMaterial for editing, useDeleteStudyMaterial for deletion, and useDownloadStudyMaterial for student downloads",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-6"
+        ],
+        "quotes": [
+          "Add place where i can upload study material"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Hooks are added to frontend/src/hooks/useQueries.ts following existing patterns",
+        "Upload hook handles file conversion to Blob format",
+        "Download hook triggers browser download with correct filename",
+        "All hooks include proper error handling and cache invalidation"
+      ]
+    },
+    {
+      "id": "REQ-21",
+      "text": "Add a student-facing study materials page at /materials that displays available study materials filtered by the student's enrolled courses and class level, with download buttons for each material",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-6"
+        ],
+        "quotes": [
+          "Add place where i can upload study material"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Page is accessible to authenticated students",
+        "Materials are automatically filtered based on student's profile",
+        "Each material card shows title, description, course name, and download button",
+        "Download triggers file download with appropriate filename",
+        "Page follows the existing student page design patterns"
+      ]
+    },
+    {
+      "id": "REQ-22",
+      "text": "Update the Layout component navigation to include a 'Study Materials' link in the student menu pointing to /materials and an 'Upload Materials' link in the admin menu pointing to /admin/materials",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-6"
+        ],
+        "quotes": [
+          "Add place where i can upload study material"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Student navigation includes 'Study Materials' link",
+        "Admin navigation includes 'Upload Materials' link",
+        "Links are positioned logically within existing menu structure",
+        "Mobile menu includes the new navigation items"
+      ]
+    },
+    {
+      "id": "REQ-23",
+      "text": "Add the phone number 7780951766 as a contact phone number displayed in the footer of the Layout component alongside existing branding and social links",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-6"
+        ],
+        "quotes": [
+          "add my phone number 7780951766"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Phone number 7780951766 is visible in the footer",
+        "Number is formatted for readability (e.g., +91 778 095 1766 or 778-095-1766)",
+        "Phone number includes a phone icon or label like 'Contact:'",
+        "Footer layout remains balanced and visually consistent"
       ]
     }
   ],
   "constraints": [
-    "Use Internet Identity for authentication (admin and student roles)",
-    "All student and course data must persist in the Motoko backend",
-    "Admin features must be restricted to admin role only",
-    "Support class levels 6 through 10 only"
+    "Do not modify frontend/src/hooks/useInternetIdentity.ts or frontend/src/hooks/useActor.ts",
+    "Do not modify frontend/src/components/ui components",
+    "Follow single-actor architecture in backend/main.mo",
+    "File uploads must be converted to Blob format for backend storage",
+    "Only generate migration.mo if existing student/course/attendance/test data structures are modified"
   ],
   "nonGoals": [
-    "Online payment processing for course fees",
-    "Video content hosting or streaming",
-    "Real-time chat or messaging between students and faculty",
-    "Mobile app development",
-    "Integration with external school management systems",
-    "Automated email notifications"
+    "Real-time collaborative editing of study materials",
+    "Version control or history tracking for uploaded files",
+    "External cloud storage integration (e.g., AWS S3, Google Drive)",
+    "Advanced file preview functionality within the browser",
+    "Automated file scanning or virus detection",
+    "Email notifications for new material uploads"
   ],
   "imageRequirements": {
-    "required": [
-      "Cognify logo featuring book and lightbulb symbolizing understanding over memorization (cognify-logo.dim_200x200.png)",
-      "Hero section background with abstract educational pattern in warm tones (hero-bg.dim_1200x600.png)",
-      "Dashboard illustration showing student progress analytics (dashboard-hero.dim_800x500.png)"
-    ],
+    "required": [],
     "edits": []
   }
 }
