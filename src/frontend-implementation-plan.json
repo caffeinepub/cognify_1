@@ -1,0 +1,337 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Cognify Student Management Platform - Frontend Implementation",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "summary": "Create student registration system with form validation for new student sign-up",
+      "acceptanceCriteria": [
+        "Students can register with all required fields",
+        "Form validation ensures valid email and phone formats",
+        "Successful registration creates a student profile",
+        "Registration is accessible without authentication"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/RegisterPage.tsx",
+          "operation": "create",
+          "description": "Create registration page component with form for student sign-up including name, class level (6-10 dropdown), contact info (email, phone with validation), and parent contact (name, phone). Call backend registerStudent function on submission. Show success message and redirect to login after successful registration. This page should be accessible without authentication."
+        },
+        {
+          "path": "frontend/src/components/StudentRegistrationForm.tsx",
+          "operation": "create",
+          "description": "Create reusable registration form component with controlled inputs for all student fields. Implement client-side validation for email format (standard email regex) and phone format (10-digit number). Display validation errors inline. Handle form submission and loading states. Use ContactInfo and ParentContact types from backend interface."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Add route for /register pointing to RegisterPage component. Ensure this route is accessible without authentication (public route)."
+        }
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "summary": "Implement student profile management with view and edit capabilities for authenticated students",
+      "acceptanceCriteria": [
+        "Authenticated students can view their complete profile",
+        "Students can edit contact information and parent details",
+        "Profile displays current enrolled courses",
+        "Changes are persisted in the backend"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/StudentProfilePage.tsx",
+          "operation": "create",
+          "description": "Create student profile page that fetches and displays current student profile using getCallerStudentProfile. Show student name, class level, contact info, parent contact, and list of enrolled courses with course names. Include edit mode toggle. Use StudentProfile type from backend interface. Require user authentication to access this page."
+        },
+        {
+          "path": "frontend/src/components/StudentProfileEditForm.tsx",
+          "operation": "create",
+          "description": "Create edit form component for student profile allowing updates to contact info (email, phone) and parent contact (name, phone). Include validation matching registration form. Call updateCallerStudentProfile backend function on save. Show success/error feedback."
+        },
+        {
+          "path": "frontend/src/hooks/useStudentProfile.ts",
+          "operation": "create",
+          "description": "Create React Query hook for fetching student profile using getCallerStudentProfile. Include mutation hook for updateCallerStudentProfile with cache invalidation. Handle loading and error states."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Add route for /profile pointing to StudentProfilePage. Ensure this route requires authentication and is accessible to authenticated students."
+        }
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "summary": "Build course enrollment system with class-filtered course browsing and enrollment tracking",
+      "acceptanceCriteria": [
+        "Students can browse available courses filtered by their class level",
+        "Each course displays name, description, and class level",
+        "Students can enroll in multiple courses",
+        "Enrollment is tracked per student",
+        "Students cannot enroll in courses outside their class level"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/CoursesPage.tsx",
+          "operation": "create",
+          "description": "Create courses page that fetches student's class level from profile, then fetches courses using getCoursesForClass. Display courses in a grid/list with name, description, and class level. Show enrollment status for each course. Include enroll button for courses not yet enrolled. Require authentication."
+        },
+        {
+          "path": "frontend/src/components/CourseCard.tsx",
+          "operation": "create",
+          "description": "Create course card component displaying course name, description, class level, and enrollment status. Include enroll button that calls enrollInCourse backend function. Disable button if already enrolled. Show loading state during enrollment."
+        },
+        {
+          "path": "frontend/src/hooks/useCourses.ts",
+          "operation": "create",
+          "description": "Create React Query hooks for fetching courses by class level (getCoursesForClass) and enrolling in courses (enrollInCourse mutation). Invalidate student profile cache after enrollment to update enrolled courses list."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Add route for /courses pointing to CoursesPage. Ensure this route requires authentication."
+        }
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "summary": "Create attendance tracking with student view showing attendance history and percentage",
+      "acceptanceCriteria": [
+        "Admins can mark attendance (present/absent) for students by date and course",
+        "Students can view their attendance records with dates",
+        "Attendance percentage is calculated and displayed",
+        "Attendance data is organized by course",
+        "Historical attendance records are preserved"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/AttendancePage.tsx",
+          "operation": "create",
+          "description": "Create attendance page for students showing their attendance records using getCallerAttendance. Display records in a table organized by course with date, course name, and status (present/absent). Calculate and display attendance percentage per course and overall. Require authentication."
+        },
+        {
+          "path": "frontend/src/pages/AdminAttendancePage.tsx",
+          "operation": "create",
+          "description": "Create admin attendance management page for marking attendance. Show list of students with course filter. Include date picker and present/absent toggle for each student. Call markAttendance backend function. Require admin role access using authorization component's role checking."
+        },
+        {
+          "path": "frontend/src/components/AttendanceTable.tsx",
+          "operation": "create",
+          "description": "Create reusable attendance table component displaying attendance records with columns for date, course, and status. Support grouping by course. Calculate and display attendance percentage."
+        },
+        {
+          "path": "frontend/src/hooks/useAttendance.ts",
+          "operation": "create",
+          "description": "Create React Query hooks for fetching student attendance (getCallerAttendance, getStudentAttendance) and marking attendance (markAttendance mutation). Include cache invalidation after marking attendance."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Add routes for /attendance (student view) and /admin/attendance (admin view). Ensure admin route includes role-based guard."
+        }
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "summary": "Implement test results tracking with student performance view and admin score recording",
+      "acceptanceCriteria": [
+        "Admins can create tests with name, date, subject, and maximum marks",
+        "Admins can record scores for each student per test",
+        "Students can view all their test results with scores and dates",
+        "System displays performance trends or average scores",
+        "Test results are organized by subject/course"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/TestResultsPage.tsx",
+          "operation": "create",
+          "description": "Create test results page for students showing their test scores using getCallerTestScores. Display results in a table with date, course, score, max score, and percentage. Calculate and display average score per course and overall average. Show performance trends using simple visualization. Require authentication."
+        },
+        {
+          "path": "frontend/src/pages/AdminTestScoresPage.tsx",
+          "operation": "create",
+          "description": "Create admin page for recording test scores. Show form to select student, course, enter score and max score. Call recordTestScore backend function. Include list view of recent test entries. Require admin role access."
+        },
+        {
+          "path": "frontend/src/components/TestScoreTable.tsx",
+          "operation": "create",
+          "description": "Create reusable test score table component displaying test records with date, course, score, max score, and percentage columns. Support sorting by date or course. Calculate average scores."
+        },
+        {
+          "path": "frontend/src/hooks/useTestScores.ts",
+          "operation": "create",
+          "description": "Create React Query hooks for fetching test scores (getCallerTestScores, getStudentTestScores) and recording scores (recordTestScore mutation). Include cache invalidation after recording."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Add routes for /test-results (student view) and /admin/test-scores (admin view). Ensure admin route includes role-based guard."
+        }
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "summary": "Build admin dashboard with overview statistics and role-based access control using the authorization component",
+      "acceptanceCriteria": [
+        "Admin role can access the dashboard after authentication",
+        "Dashboard displays total number of registered students",
+        "Dashboard shows enrollment counts per course",
+        "Dashboard includes attendance statistics (overall percentage, trends)",
+        "Dashboard displays recent test performance summaries",
+        "Regular students cannot access admin features"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/AdminDashboardPage.tsx",
+          "operation": "create",
+          "description": "Create admin dashboard page showing overview statistics. Use the authorization component to verify admin role and show access denied screen for non-admins. Fetch stats using getDashboardStats backend function. Display total students count, total courses count, and summary cards. Include navigation links to admin management pages. Reference generated image at frontend/public/assets/generated/dashboard-hero.dim_800x500.png for dashboard hero section."
+        },
+        {
+          "path": "frontend/src/components/DashboardStatsCard.tsx",
+          "operation": "create",
+          "description": "Create reusable statistics card component for displaying dashboard metrics with icon, label, and value. Support different visual styles for different metric types."
+        },
+        {
+          "path": "frontend/src/hooks/useDashboardStats.ts",
+          "operation": "create",
+          "description": "Create React Query hook for fetching dashboard statistics using getDashboardStats. Handle loading and error states."
+        },
+        {
+          "path": "frontend/src/components/AccessDeniedScreen.tsx",
+          "operation": "create",
+          "description": "Create access denied screen component to display when unauthorized users attempt to access admin features. Show clear message and link back to appropriate page based on user role."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Add route for /admin/dashboard pointing to AdminDashboardPage. Ensure this route requires admin role using authorization component's role checking. Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "summary": "Implement admin student management interface with search, filter, and detailed profile view",
+      "acceptanceCriteria": [
+        "Admins can view a list of all registered students",
+        "List includes search by name and filter by class functionality",
+        "Clicking a student shows detailed profile with courses, attendance, and test scores",
+        "Admins can edit student contact information and class level",
+        "Changes are saved and reflected immediately"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/AdminStudentsPage.tsx",
+          "operation": "create",
+          "description": "Create admin student management page showing list of all students using getAllStudents. Include search input using searchStudentsByName and class level filter dropdown using getStudentsByClass. Display students in a table with name, class, and contact info. Include click handler to navigate to detailed student view. Require admin role access."
+        },
+        {
+          "path": "frontend/src/pages/AdminStudentDetailPage.tsx",
+          "operation": "create",
+          "description": "Create detailed student view page for admins showing complete student profile using getStudentProfile, attendance records using getStudentAttendance, and test scores using getStudentTestScores. Include edit mode for updating student information via updateStudentProfile. Require admin role access."
+        },
+        {
+          "path": "frontend/src/components/StudentSearchFilter.tsx",
+          "operation": "create",
+          "description": "Create search and filter component with search input for name and dropdown for class level (6-10). Handle debounced search and filter state changes."
+        },
+        {
+          "path": "frontend/src/components/StudentListTable.tsx",
+          "operation": "create",
+          "description": "Create student list table component displaying students with columns for name, class level, email, phone. Support row click navigation to detail view. Show loading and empty states."
+        },
+        {
+          "path": "frontend/src/hooks/useStudentManagement.ts",
+          "operation": "create",
+          "description": "Create React Query hooks for admin student operations: getAllStudents, searchStudentsByName, getStudentsByClass, getStudentProfile, updateStudentProfile mutation. Include proper cache invalidation."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Add routes for /admin/students (list view) and /admin/students/:principalId (detail view). Ensure both routes require admin role."
+        }
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "summary": "Create admin course management interface for adding, editing courses and viewing enrollments",
+      "acceptanceCriteria": [
+        "Admins can create new courses with name, description, and class level",
+        "Admins can edit existing course information",
+        "Course list shows current enrollment count for each course",
+        "Course changes are persisted and immediately visible to students"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/AdminCoursesPage.tsx",
+          "operation": "create",
+          "description": "Create admin course management page displaying all courses using getAllCourses. Show courses in a table with name, description, class level, and enrollment count. Include buttons to add new course and edit existing courses. Require admin role access."
+        },
+        {
+          "path": "frontend/src/components/CourseFormModal.tsx",
+          "operation": "create",
+          "description": "Create modal component with form for adding or editing courses. Include inputs for course ID (for new courses), name, description, and class level dropdown (6-10). Call addCourse or editCourse backend functions. Show validation and loading states."
+        },
+        {
+          "path": "frontend/src/components/AdminCourseTable.tsx",
+          "operation": "create",
+          "description": "Create course management table component displaying courses with columns for name, description, class level, and enrollment count. Include edit button for each row. Support sorting by class level or enrollment count."
+        },
+        {
+          "path": "frontend/src/hooks/useCourseManagement.ts",
+          "operation": "create",
+          "description": "Create React Query hooks for admin course operations: getAllCourses with enrollment counts, addCourse mutation, editCourse mutation. Invalidate course cache after mutations."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Add route for /admin/courses pointing to AdminCoursesPage. Ensure this route requires admin role."
+        }
+      ]
+    },
+    {
+      "id": "REQ-9",
+      "summary": "Design education-focused visual theme with warm colors, clean typography, and consistent layout patterns",
+      "acceptanceCriteria": [
+        "Color scheme uses warm, professional tones appropriate for education",
+        "Typography is clear and readable for all age groups",
+        "Layout creates a sense of structure and academic professionalism",
+        "Design is consistent across all pages and components",
+        "Visual style supports the 'From Rote to Reason' mission"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/index.css",
+          "operation": "modify",
+          "description": "Update global styles with education-focused design system using warm color palette (avoiding blue and purple). Define CSS custom properties for warm accent colors (e.g., amber, orange, warm neutrals), consistent typography scale with readable fonts suitable for all ages, spacing scale, and shadow utilities. Apply background colors and text colors that create academic professionalism."
+        },
+        {
+          "path": "frontend/tailwind.config.js",
+          "operation": "modify",
+          "description": "Configure Tailwind theme with warm color palette for education context. Extend colors with warm tones (amber, orange, warm grays). Set typography with clear, readable font families. Define consistent spacing and border radius values that convey structure and clarity."
+        },
+        {
+          "path": "frontend/src/components/Layout.tsx",
+          "operation": "create",
+          "description": "Create layout component providing consistent page structure with header containing logo (using generated image at frontend/public/assets/generated/cognify-logo.dim_200x200.png), navigation menu, and user info/auth controls. Include footer with branding. Apply warm, professional styling consistent with education theme. Use this layout wrapper for all pages."
+        },
+        {
+          "path": "frontend/src/components/HeroSection.tsx",
+          "operation": "create",
+          "description": "Create hero section component for landing/home page displaying Cognify mission 'From Rote to Reason'. Use generated background image at frontend/public/assets/generated/hero-bg.dim_1200x600.png. Include welcome message and call-to-action for registration or login. Apply warm, welcoming visual style."
+        },
+        {
+          "path": "frontend/src/pages/HomePage.tsx",
+          "operation": "create",
+          "description": "Create home page component using HeroSection and providing overview of platform features. Include sections for student benefits and course highlights. Use warm, educational visual design. This page should be publicly accessible."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wrap all routes with Layout component to ensure consistent styling. Add root route / pointing to HomePage. Ensure Layout includes navigation links to all main sections (courses, profile, attendance, test results for students; dashboard, students, courses, attendance, test scores for admins)."
+        }
+      ]
+    }
+  ]
+}

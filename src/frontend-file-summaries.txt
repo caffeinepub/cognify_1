@@ -1,0 +1,5 @@
+{
+  "frontend/src/pages/AdminCoursesPage.tsx": "Admin page for managing courses with add/edit functionality using dialogs and displaying all courses in a table with class level badges.",
+  "frontend/src/pages/AdminAttendancePage.tsx": "Admin page for marking student attendance by course with toggle switches for present/absent status and filtered student lists.",
+  "frontend/src/pages/AdminTestScoresPage.tsx": "Admin page for recording test scores with student/course selection and score input fields showing calculated percentages."
+}

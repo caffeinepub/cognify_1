@@ -1,0 +1,181 @@
+{
+  "kind": "build_request",
+  "title": "Build Student Management Platform for Cognify",
+  "projectName": "Cognify",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "text": "Create student registration system allowing new students to sign up with name, class (6-10), contact number, email, and parent contact information",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-user-option1"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Students can register with all required fields",
+        "Form validation ensures valid email and phone formats",
+        "Successful registration creates a student profile",
+        "Registration is accessible without authentication"
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Implement student profile management where students can view and update their personal information, enrolled courses, and contact details",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-user-option1"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Authenticated students can view their complete profile",
+        "Students can edit contact information and parent details",
+        "Profile displays current enrolled courses",
+        "Changes are persisted in the backend"
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "Build course enrollment system supporting courses for Class 6-8 (Foundation Building: Mathematics, Science, Basic Concept Development, Activity-Based Learning) and Class 9-10 (Board Preparation: Complete NCERT Coverage, Mathematics, Science including Physics/Chemistry/Biology)",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-user-courses"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Students can browse available courses filtered by their class level",
+        "Each course displays name, description, and class level",
+        "Students can enroll in multiple courses",
+        "Enrollment is tracked per student",
+        "Students cannot enroll in courses outside their class level"
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "text": "Create attendance tracking system where admins can mark daily attendance for each student by course, and students can view their attendance history and percentage",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-user-option1"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Admins can mark attendance (present/absent) for students by date and course",
+        "Students can view their attendance records with dates",
+        "Attendance percentage is calculated and displayed",
+        "Attendance data is organized by course",
+        "Historical attendance records are preserved"
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "text": "Implement test results and progress tracking where admins can record test scores for weekly tests, and students can view their test history, scores, and performance trends",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-user-option1"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Admins can create tests with name, date, subject, and maximum marks",
+        "Admins can record scores for each student per test",
+        "Students can view all their test results with scores and dates",
+        "System displays performance trends or average scores",
+        "Test results are organized by subject/course"
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "text": "Build admin dashboard with role-based authentication providing overview of total students, course enrollments, attendance statistics, and test performance summaries",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-user-option1"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Admin role can access the dashboard after authentication",
+        "Dashboard displays total number of registered students",
+        "Dashboard shows enrollment counts per course",
+        "Dashboard includes attendance statistics (overall percentage, trends)",
+        "Dashboard displays recent test performance summaries",
+        "Regular students cannot access admin features"
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "text": "Implement admin student management interface allowing admins to view all students, search/filter by name or class, view detailed student profiles including enrollment and performance data, and edit student information",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-user-option1"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Admins can view a list of all registered students",
+        "List includes search by name and filter by class functionality",
+        "Clicking a student shows detailed profile with courses, attendance, and test scores",
+        "Admins can edit student contact information and class level",
+        "Changes are saved and reflected immediately"
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "text": "Create admin course management interface allowing admins to add new courses, edit course details (name, description, class level), and view enrollment counts per course",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-user-courses"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Admins can create new courses with name, description, and class level",
+        "Admins can edit existing course information",
+        "Course list shows current enrollment count for each course",
+        "Course changes are persisted and immediately visible to students"
+      ]
+    },
+    {
+      "id": "REQ-9",
+      "text": "Design a modern, education-focused visual theme with a professional academic aesthetic using warm, welcoming colors (avoiding blue and purple), clean typography suitable for an educational institution, and consistent spacing and layout patterns that convey trust and clarity",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-context"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Color scheme uses warm, professional tones appropriate for education",
+        "Typography is clear and readable for all age groups",
+        "Layout creates a sense of structure and academic professionalism",
+        "Design is consistent across all pages and components",
+        "Visual style supports the 'From Rote to Reason' mission"
+      ]
+    }
+  ],
+  "constraints": [
+    "Use Internet Identity for authentication (admin and student roles)",
+    "All student and course data must persist in the Motoko backend",
+    "Admin features must be restricted to admin role only",
+    "Support class levels 6 through 10 only"
+  ],
+  "nonGoals": [
+    "Online payment processing for course fees",
+    "Video content hosting or streaming",
+    "Real-time chat or messaging between students and faculty",
+    "Mobile app development",
+    "Integration with external school management systems",
+    "Automated email notifications"
+  ],
+  "imageRequirements": {
+    "required": [
+      "Cognify logo featuring book and lightbulb symbolizing understanding over memorization (cognify-logo.dim_200x200.png)",
+      "Hero section background with abstract educational pattern in warm tones (hero-bg.dim_1200x600.png)",
+      "Dashboard illustration showing student progress analytics (dashboard-hero.dim_800x500.png)"
+    ],
+    "edits": []
+  }
+}

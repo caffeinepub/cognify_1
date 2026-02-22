@@ -1,0 +1,123 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 3,
+  "summary": "Student Management Platform for Cognify coaching institute including student registration/profiles, course enrollment system, attendance tracking, test results/progress reports, and admin dashboard",
+  "architectural_notes": [
+    "Building a student management platform for Cognify coaching institute",
+    "Target users: students (Class 6-10), educators, and admin staff",
+    "Core functionality: registration, enrollment, attendance, progress tracking"
+  ],
+  "known_issues": [],
+  "isFixRequest": false,
+  "imageRequirements": "## Required Images\n- Cognify logo featuring book and lightbulb symbolizing understanding over memorization (cognify-logo.dim_200x200.png)\n- Hero section background with abstract educational pattern in warm tones (hero-bg.dim_1200x600.png)\n- Dashboard illustration showing student progress analytics (dashboard-hero.dim_800x500.png)",
+  "existing_features": [
+    {
+      "id": "feature-create-student-registration-system-allowing-new-students-to-sign-up-with-name-class-6-10-contact-number-email-and-parent-contact-information",
+      "title": "Create student registration system allowing new students to sign up with name, class (6-10), contact number, email, and parent contact information",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-student-profile-management-where-students-can-view-and-update-their-personal-information-enrolled-courses-and-contact-details",
+      "title": "Implement student profile management where students can view and update their personal information, enrolled courses, and contact details",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-build-course-enrollment-system-supporting-courses-for-class-6-8-foundation-building-mathematics-science-basic-concept-development-activity-based-learning-and-class-9-10-board-preparation-complete-ncert-coverage-mathematics-science-including-physics-chemistry-biology",
+      "title": "Build course enrollment system supporting courses for Class 6-8 (Foundation Building: Mathematics, Science, Basic Concept Development, Activity-Based Learning) and Class 9-10 (Board Preparation: Complete NCERT Coverage, Mathematics, Science including Physics/Chemistry/Biology)",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-attendance-tracking-system-where-admins-can-mark-daily-attendance-for-each-student-by-course-and-students-can-view-their-attendance-history-and-percentage",
+      "title": "Create attendance tracking system where admins can mark daily attendance for each student by course, and students can view their attendance history and percentage",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-test-results-and-progress-tracking-where-admins-can-record-test-scores-for-weekly-tests-and-students-can-view-their-test-history-scores-and-performance-trends",
+      "title": "Implement test results and progress tracking where admins can record test scores for weekly tests, and students can view their test history, scores, and performance trends",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-build-admin-dashboard-with-role-based-authentication-providing-overview-of-total-students-course-enrollments-attendance-statistics-and-test-performance-summaries",
+      "title": "Build admin dashboard with role-based authentication providing overview of total students, course enrollments, attendance statistics, and test performance summaries",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-admin-student-management-interface-allowing-admins-to-view-all-students-search-filter-by-name-or-class-view-detailed-student-profiles-including-enrollment-and-performance-data-and-edit-student-information",
+      "title": "Implement admin student management interface allowing admins to view all students, search/filter by name or class, view detailed student profiles including enrollment and performance data, and edit student information",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-admin-course-management-interface-allowing-admins-to-add-new-courses-edit-course-details-name-description-class-level-and-view-enrollment-counts-per-course",
+      "title": "Create admin course management interface allowing admins to add new courses, edit course details (name, description, class level), and view enrollment counts per course",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-design-a-modern-education-focused-visual-theme-with-a-professional-academic-aesthetic-using-warm-welcoming-colors-avoiding-blue-and-purple-clean-typography-suitable-for-an-educational-institution-and-consistent-spacing-and-layout-patterns-that-convey-trust-and-clarity",
+      "title": "Design a modern, education-focused visual theme with a professional academic aesthetic using warm, welcoming colors (avoiding blue and purple), clean typography suitable for an educational institution, and consistent spacing and layout patterns that convey trust and clarity",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Student registration and profile management",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Course enrollment system",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Attendance tracking",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Test results and progress reports",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Admin dashboard for managing students",
+      "reqIds": [],
+      "status": "pending"
+    }
+  ],
+  "gameProjectType": "none",
+  "projectName": "Cognify",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}
